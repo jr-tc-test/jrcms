@@ -29,7 +29,7 @@ podTemplate(
         }
     }
     
-    if (env.BRANCH_NAME == 'origin/master') {
+//    if (env.BRANCH_NAME == 'origin/master') {
         stage('Push Docker image') {
             withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
             container('docker') {
@@ -58,7 +58,7 @@ podTemplate(
         stage("Deploy to production environment") {
             deployToEB('production')
         }
-    }
+//    }
   }
 }
 
