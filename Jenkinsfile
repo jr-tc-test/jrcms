@@ -28,26 +28,24 @@ podTemplate(
             sh "docker build -t ${image} ."
         }
     }
-    
-//    if (env.BRANCH_NAME == 'origin/master') {
-        stage('Push Docker image') {
-            withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
-            container('docker') {
-                sh "docker login --username ${USER} --password ${PASSWD}"
-                sh "docker push ${image}"
-            }
-            }
+    stage('Push Docker image') {
+         withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USER', passwordVariable: 'PASSWD')]) {
+         container('docker') {
+            sh "docker login --username ${USER} --password ${PASSWD}"
+            sh "docker push ${image}"
         }
-        
-        stage("Deploy to test environment") {
-            deployToEB('test')
         }
+     }
         
-        stage("Integration test to test environment") {  
-            smokeTest('test')
-        }
+    stage("Deploy to test environment") {
+         deployToEB('test')
+    }
         
-        stage("Deploy to staging environment") {
+    stage("Integration test to test environment") {  
+         smokeTest('test')
+    }
+        
+    stage("Deploy to staging environment") {
             deployToEB('staging')
         }
         
@@ -58,8 +56,7 @@ podTemplate(
         stage("Deploy to production environment") {
             deployToEB('production')
         }
-//    }
-  }
+    }
 }
 
 def smokeTest(environment) {     
